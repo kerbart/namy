@@ -9,8 +9,6 @@ if [ ! -d "data" ]; then
     tar xvzf data.tar.gz
 fi
 
-exit(0)
-
 echo "*> build namy jar package..."
 ./mvnw package
 
