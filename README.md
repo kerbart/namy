@@ -1,4 +1,4 @@
-#NAMY
+# NAMY
 
 This project contains more than 33.000 firstName (essentially french) and associated metadata.
 
