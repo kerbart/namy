@@ -1,8 +1,14 @@
 # NAMY
 
-This project contains more than 33.000 firstName (essentially french) and associated metadata.
+This project contains more than 33.000 firstnames (essentially french) and associated metadata.
 
-## try it !
+## try it (fast)
+simply run
+```$bash
+    ./run.sh
+```
+
+## try it (step by step) !
 git clone this project
 ```$bash
 git clone https://github.com/kerbart/namy
@@ -25,3 +31,8 @@ run everything with docker-compose
 ```$bash
 docker-compose up --build
 ```
+
+## search firstname metadata
+Open http://localhost:8080/
+Type a firstname, hit enter. you are in !
+
