@@ -3,6 +3,11 @@
 This project contains more than 33.000 firstnames (essentially french) and associated metadata.
 
 ## try it (fast)
+git clone this project
+```$bash
+git clone https://github.com/kerbart/namy
+```
+
 simply run
 ```$bash
     ./run.sh
