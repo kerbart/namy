@@ -4,10 +4,12 @@ echo "+----------------------------------+"
 echo "|            Namy setup            |"
 echo "+----------------------------------+"
 
-if [ -d "data"] ; then
+if [ ! -d "data" ]; then
     echo "*> Uncompress data/ mongo directory..."
     tar xvzf data.tar.gz
 fi
+
+exit(0)
 
 echo "*> build namy jar package..."
 ./mvnw package
