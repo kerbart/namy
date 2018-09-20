@@ -1,0 +1,42 @@
+version: '2.1'
+
+services:
+  mongo:
+    image: mongo:4.1.2
+    container_name: mongo
+    labels:
+    - "SERVICE_NAME=mongo"
+    volumes:
+    - './data:/data/db'
+    ports:
+    - "27017:27017"
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/namy --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 12
+  admin:
+    image: mongo-express
+    labels:
+    - "SERVICE_NAME=admin"
+    ports:
+    - "8081:8081"
+    volumes:
+    - './data:/data/db'
+    restart: always
+    depends_on:
+      mongo:
+        condition: service_healthy
+    links:
+    - mongo
+  namy:
+    build: .
+    labels:
+    - "SERVICE_NAME=namy"
+    ports:
+    - "8080:8080"
+    links:
+    - mongo
+    depends_on:
+      mongo:
+        condition: service_healthy

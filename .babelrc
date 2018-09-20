@@ -1,0 +1,86 @@
+{
+  "sourceMaps": true,
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "ie": 11,
+          // We currently minify with uglify
+          // Remove after https://github.com/mishoo/UglifyJS2/issues/448
+          "uglify": true
+        },
+        // Disable polyfill transforms
+        "useBuiltIns": true,
+        "debug": false,
+        // Do not transform modules to CJS : module is load from webpack
+        "modules": false
+      }
+    ],
+    "react"
+  ],
+  "env": {
+    "development": {
+      "presets": [["env", { "debug": true }]],
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-es2015-modules-commonjs",
+        [
+          "transform-object-rest-spread",
+          {
+            "useBuiltIns": true
+          }
+        ]
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "env",
+          {
+            "modules": false
+          }
+        ]
+      ],
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-es2015-modules-commonjs",
+        [
+          "transform-object-rest-spread",
+          {
+            "useBuiltIns": true
+          }
+        ]
+      ]
+    }
+  },
+  "plugins": [
+    "react-hot-loader/babel",
+    "transform-decorators-legacy",
+    ["transform-object-rest-spread", { "useBuiltIns": true }],
+    ["transform-class-properties", { "spec": true }],
+    [
+      "module-resolver",
+      {
+        "root": ["./src/main/front/src"],
+        "alias": {
+          "_components": "./src/main/front/src/js/components/",
+          "_views": "./src/main/front/src/js/views/",
+          "_lib": "./src/main/front/src/js/components/lib/",
+          "_containers": "./src/main/front/src/js/containers/",
+          "_api": "./src/main/front/src/js/api/",
+          "_actions": "./src/main/front/src/js/actions/",
+          "_constants": "./src/main/front/src/js/constants/",
+          "_data": "./src/main/front/src/js/data/",
+          "_i18n": "./src/main/front/src/js/i18n/",
+          "_reducers": "./src/main/front/src/js/reducers/",
+          "_utils": "./src/main/front/src/js/utils/",
+
+
+          "_aphrodite": "aphrodite/no-important"
+        }
+      }
+    ]
+
+  ]
+}
