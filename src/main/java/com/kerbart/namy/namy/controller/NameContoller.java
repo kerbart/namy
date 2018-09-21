@@ -3,6 +3,7 @@ package com.kerbart.namy.namy.controller;
 import com.kerbart.namy.namy.model.Firstname;
 import com.kerbart.namy.namy.repository.mongo.FirstNameRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.Normalizer;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -35,7 +35,7 @@ public class NameContoller {
     @ResponseBody
     public Firstname firstName(@PathVariable("firstName") String firstName) {
         List<Firstname> firstNames = firstNameRepository
-                .findByValue(Normalizer.normalize(firstName, Normalizer.Form.NFD).toUpperCase());
+                .findByValue(StringUtils.stripAccents(firstName).toUpperCase());
 
         firstNames.sort((f1, f2) -> f1.findBestyear().getNumber() < f2.findBestyear().getNumber() ? 1 : -1);
 
