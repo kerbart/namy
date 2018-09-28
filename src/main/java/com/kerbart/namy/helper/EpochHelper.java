@@ -1,6 +1,6 @@
-package com.kerbart.namy.namy.helper;
+package com.kerbart.namy.helper;
 
-import com.kerbart.namy.namy.model.Epoch;
+import com.kerbart.namy.model.Epoch;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;

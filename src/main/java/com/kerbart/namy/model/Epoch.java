@@ -1,4 +1,4 @@
-package com.kerbart.namy.namy.model;
+package com.kerbart.namy.model;
 
 public enum Epoch {
     OLD, // 1900 - 1930

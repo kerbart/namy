@@ -2,73 +2,236 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <title>Namy</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
     <style type="text/css">
-        #searchFirstName {
-            width: 330px;
-            height: 50px;
+        body {
+            font-family: Verdana;
+        }
+
+        .bigger-yes {
+            transform: scale(3) translateX(100px) !important;
+            opacity: 0;
+        }
+
+        .bigger-no {
+            transform: scale(3) translateX(-200px) !important;
+            opacity: 0;
+        }
+
+        .firstNameCard {
+            width: 80%;
+            height: 300px;
             margin: auto;
+            border: 1px solid #DDD;
+            box-shadow: #DDDDDD 2px 5px 10px;
+            background-color: #FEFEFE;
+            border-radius: 5px;
+            padding: 10px;
             text-align: center;
-            -webkit-transition: all 1s;
-            transition: all 1s;
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            transition: all 0.5s;
         }
 
-        #searchFirstName input {
-            border: none;
-            width: 250px;
-            height: 50px;
-            font-size: 24px;
+        .firstNameCard h1 {
+            padding: 0;
+            margin: 0;
+            margin-top: 25px;
+            margin-bottom: 25px;
             text-align: center;
-            -webkit-transition: all 1s;
-            transition: all 1s;
+            font-size: 32px;
         }
 
-        #searchFirstName button.ok {
-            border: none;
-            height: 50px;
-            font-size: 24px;
-            text-align: center;
-            -webkit-transition: all 1s;
-            transition: all 1s;
-        }
-
-        .smaller #searchFirstName {
-            width: 165px;
-            height: 25px;
-        }
-
-        .smaller #searchFirstName input {
-            width: 125px;
-            height: 25px;
+        .firstNameCard i {
             font-size: 12px;
+            color: #666;
+            margin-top: 25px;
+            margin-bottom: 25px;
         }
 
-        .smaller #searchFirstName button.ok {
-            height: 25px;
-            font-size: 12px;
+        .firstNameCard i b {
+            font-weight: bold;
+            color: black;
+
         }
+
+        .firstNameCard .bestYear {
+            color: #666;
+            font-size: 12px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .firstNameCard .bestYear b {
+            font-weight: bold;
+            color: black;
+        }
+
+        .choises {
+            padding: 0;
+            margin: auto;
+            margin-top: 25px;
+            margin-bottom: 25px;
+
+            height: 80px;
+        }
+
+        .choises li {
+            list-style: none;
+            width: 33%;
+            float: left;
+            text-align: center;
+        }
+
+        .choises li span {
+            font-size: 9px;
+        }
+
+        .choises li i {
+            font-size: 32px;
+            height: 15px !important;
+        }
+
+        .choises li i.like {
+            color: #42709f;
+        }
+
+        .choises li i.dislike {
+            color: #9f3c51;
+        }
+
     </style>
 </head>
 <body>
-<div id="app">
-    <div id="smallerize">
-        <div id="searchFirstName">
-            <input placeholder="cherchez un prénom" v-on:keyup.enter="searchFirstName" id="firstNameInput">
-            <button class="ok" v-on:click="searchFirstName">OK</button>
-        </div>
-    </div>
-    <div id="result"></div>
+<div id="cardContainer">
+
 </div>
-<script src="js/index.js"></script>
+
 <script>
-    document.getElementById("firstNameInput").focus();
+    // init userId
+    var userId = localStorage.getItem("userId");
+    if (userId == null) {
+        const req = new XMLHttpRequest();
+        req.open('GET', '/api/user/register', false);
+        req.send(null);
+
+        if (req.status === 200) {
+            localStorage.setItem("userId", JSON.parse(req.responseText).id);
+        }
+    }
+
+    // get Random names
+    const req = new XMLHttpRequest();
+    req.open('GET', '/api/random', false);
+    req.send(null);
+
+    if (req.status === 200) {
+        JSON.parse(req.responseText).forEach(
+            function (firstName) {
+                addCard(firstName)
+            }
+        );
+        setUPCards();
+    } else {
+        console.log("Status de la réponse: %d (%s)", req.status, req.statusText);
+    }
+
+
+    function addCard(data) {
+        var firstName = data.value;
+        var genre = data.metadata.male == true ? "masculin" : "feminin";
+        var meilleureAnnee = data.bestYear[0] != undefined ? data.bestYear[0].date.substr(0, 4) : '';
+        var output = '<div class="firstNameCard" id="' + data.id + '">' +
+            '<h1>' + firstName + '</h1>' +
+            '<i>prénom <b>' + genre + '</b></i>' +
+            '<p class="bestYear">Année tendance : <b>' + meilleureAnnee + '</b></p>' +
+            '   <ul class="choises">' +
+            '       <li class="dislike-button">' +
+            '           <i class="dislike fas fa-thumbs-down"></i><br/>' +
+            '           <span>Je n\'aime pas</span></li>' +
+            '       <li class="dontknow-button">' +
+            '           <i class="fas fa-question"></i><br/>' +
+            '           <span>Indécis...</span></li>' +
+            '       <li class="like-button">' +
+            '           <i class="like fas fa-thumbs-up"></i><br/>' +
+            '           <span>J\'aime</span></li>' +
+            '   </ul>' +
+            '</div>';
+        document.getElementById("cardContainer").innerHTML += output;
+    }
+
+
+    function sendLike(likeType, firstNameId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", '/api/like', true);
+
+        //Send the proper header information along with the request
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {//Call a function when the state changes.
+            if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                // Request finished. Do processing here.
+            }
+        }
+        xhr.send(JSON.stringify({
+            "userId": localStorage.getItem("userId"),
+            "firstNameId": firstNameId,
+            "likeType": likeType
+        }));
+    }
+
+
+    function setUPCards() {
+        document.querySelectorAll(".dislike-button").forEach(
+            function (element) {
+                element.onclick = function () {
+                    var parentElement = this.parentElement.parentElement;
+                    sendLike("UNLIKED", parentElement.getAttribute("id"))
+                    parentElement.classList.add("bigger-no");
+                    window.setTimeout(function () {
+                        parentElement.parentElement.removeChild(parentElement)
+                    }, 1000);
+                }
+            }
+        );
+
+        document.querySelectorAll(".dontknow-button").forEach(
+            function (element) {
+                element.onclick = function () {
+                    var parentElement = this.parentElement.parentElement;
+                    sendLike("DONTKNOW", parentElement.getAttribute("id"))
+                    parentElement.classList.add("bigger-yes");
+                    window.setTimeout(function () {
+                            parentElement.parentElement.removeChild(parentElement)
+                        }, 500
+                    );
+
+                }
+            }
+        );
+
+
+        document.querySelectorAll(".like-button").forEach(
+            function (element) {
+                element.onclick = function () {
+                    var parentElement = this.parentElement.parentElement;
+                    sendLike("LIKED", parentElement.getAttribute("id"))
+                    parentElement.classList.add("bigger-yes");
+                    window.setTimeout(function () {
+                            parentElement.parentElement.removeChild(parentElement)
+                        }, 500
+                    );
+
+                }
+            }
+        );
+    }
 </script>
 </body>
 </html>

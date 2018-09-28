@@ -1,4 +1,4 @@
-package com.kerbart.namy.namy.model;
+package com.kerbart.namy.model;
 
 import lombok.Builder;
 import lombok.Data;

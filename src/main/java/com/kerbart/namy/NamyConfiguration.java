@@ -1,4 +1,4 @@
-package com.kerbart.namy.namy;
+package com.kerbart.namy;
 
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.kerbart.namy.namy.repository.mongo")
+@EnableMongoRepositories(basePackages = "com.kerbart.namy.repository.mongo")
 public class NamyConfiguration {
 
     //MongoDB properties read from the application.yaml configuration file (to handle different profiles)
