@@ -1,10 +1,12 @@
 package com.kerbart.namy.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class Firstname {
 
     private String id;

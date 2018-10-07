@@ -32,7 +32,7 @@
             padding: 10px;
             text-align: center;
             position: absolute;
-            top: 25px;
+            top: 65px;
             left: 50%;
             -webkit-transform: translateX(-50%);
             transform: translateX(-50%);
@@ -106,14 +106,74 @@
             color: #9f3c51;
         }
 
+        #modifiers {
+            text-align: center;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            position: absolute;
+            width: 100%;
+        }
+
+        #modifiers a {
+            display: inline;
+            float: left;
+            padding: 5px;
+            margin: 5px;
+            font-size: 12px;
+            background-color: #EEE;
+            text-decoration: none;
+            font-family: Courier;
+        }
+
+        #modifiers a.selected {
+
+            border: 1px solid #333;
+        }
+
     </style>
 </head>
 <body>
+<div id="modifiers">
+    <a id="randomMode" class="selected" onclick="setRandomMode()">> Random mode</a>
+    <a id="florentMode" onclick="setFlorentMode()">> Florent mode</a>
+    <a id="briceMode" onclick="setBriceMode()">> Brice mode</a>
+
+</div>
+
 <div id="cardContainer">
 
 </div>
 
 <script>
+    var modifier = "";
+
+    function setActive(name) {
+        document.getElementById("randomMode").className = "";
+        document.getElementById("florentMode").className = "";
+        document.getElementById("briceMode").className = "";
+        document.getElementById(name + "Mode").className = "selected";
+    }
+
+    function setFlorentMode() {
+        modifier = "/florent";
+        setActive("florent");
+        get_names();
+    }
+
+    function setBriceMode() {
+        modifier = "/brice";
+        setActive("brice");
+        get_names();
+    }
+
+    function setRandomMode() {
+        setActive("random");
+        modifier = "";
+        get_names();
+    }
+
+
     // init userId
     var userId = localStorage.getItem("userId");
     if (userId == null) {
@@ -126,20 +186,23 @@
         }
     }
 
-    // get Random names
-    const req = new XMLHttpRequest();
-    req.open('GET', '/api/random', false);
-    req.send(null);
-
-    if (req.status === 200) {
-        JSON.parse(req.responseText).forEach(
-            function (firstName) {
-                addCard(firstName)
-            }
-        );
-        setUPCards();
-    } else {
-        console.log("Status de la réponse: %d (%s)", req.status, req.statusText);
+    function get_names() {
+        document.getElementById("cardContainer").innerHTML = "";
+        // get Random names
+        const req = new XMLHttpRequest();
+        req.open('GET', '/api/random' + modifier, false);
+        req.send(null);
+        addPlusRien();
+        if (req.status === 200) {
+            JSON.parse(req.responseText).forEach(
+                function (firstName) {
+                    addCard(firstName)
+                }
+            );
+            setUPCards();
+        } else {
+            console.log("Status de la réponse: %d (%s)", req.status, req.statusText);
+        }
     }
 
 
@@ -166,6 +229,17 @@
         document.getElementById("cardContainer").innerHTML += output;
     }
 
+    function addPlusRien() {
+
+        var output = '<div class="firstNameCard" >' +
+            '<h1>Y\'a plus rien...</h1>' +
+            '<br />' +
+            '<i>et y\'a pas de bouton de rechargement...</i>' +
+            '</div>';
+        document.getElementById("cardContainer").innerHTML += output;
+    }
+
+    get_names();
 
     function sendLike(likeType, firstNameId) {
         var xhr = new XMLHttpRequest();

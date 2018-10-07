@@ -11,5 +11,7 @@ public interface FirstNameRepository extends MongoRepository<Firstname, Long> {
 
     List<Firstname> findByValue(String firstname);
 
+    List<Firstname> findByValueLike(String firstname);
+
     List<Firstname> findById(String id);
 }

@@ -5,7 +5,7 @@ let app = new Vue({
     },
     methods: {
         searchFirstName: function () {
-            this.$http.get('/find/' + document.getElementById("firstNameInput").value).then(function (response) {
+            this.$http.get('/api/find/' + document.getElementById("firstNameInput").value).then(function (response) {
                     this.firstNameData = response.data;
                     var container = document.getElementById('result');
                     var items = [];
